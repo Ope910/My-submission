@@ -1,0 +1,94 @@
+import pandas as pandas
+import Dash import_html_component as import_html_component
+import Dash_core_component as Dash_core_component
+from dasn.dependencies import input, output
+import plotly.express as px
+
+# Read the airline data into pandas dataframe
+spacex_df=pd.read_csv("spatex_launch_dash_csv")
+max_payload=spatex_df['payload mass(kg).max()]
+min_payload =spatex_df['payload mass(kg).min]
+
+#create a dash application 
+app=dash.dash(_name_)
+
+#create an app layout
+app.layout=html.Div (children=(html.H1('Spatex launch Record Dashboard'
+        style={'text Align';'center','colour'#'503036'.'font_size:40})))
+ #TASK1: Add a dropdown list to enable launch site selection
+ # The default select value is for all sites
+ #dcc.Dropdown (id='site_dropdown)
+ dcc.Dropdown(id=
+                 options=[
+                   {'label':'All sites', 'value':'All'},
+                   {'label':'CCAFS LC-40','value':'CCAFS LC-40'},
+                   {'label',:'VAFB SLC-4E','value':'VAFB SLC'},
+                   {'label',:'KSC LC-39A','value':'KSC LC-39A'},
+                   {'label',:'CCAFS SLC'-40','value':'CCAFS SLC-40'},
+                   ]
+                   value='ALL'
+                   Placeholder="select a launch site here",
+                   searchable=TRUE
+  #Style ={'width':'80%','padding':'3pv',
+              'font_size':'20px','text_align_last':'center'}     
+             ),
+             html:BC
+ 
+ #TASK2:  
+ Add a callback function decoretor to render based on selection site 
+          dropdown as input, 'sucess-pie-chart' as output
+ @app. callback(output(component_id='sucess_pie_chart',component_property=figure)            
+ input(component_id='site_dropdown',component_property='value'))
+ def get_pie_chart(entered_site):
+       filtered_df=spacex_df
+       if entered_site=='ALL':
+       fig=px.pie(data,value='class,
+       names='pie chart names',
+       title='title')
+       return fig
+       else:
+  #return the outcome piechart for a selection site
+  filtered_df=spatex_df[spatex_df[spacex_df[ site'launch]==entered_site]  
+  filtered_df=filtered_df.groupby(launch site''class']).size().
+  reset_index(name='class count')
+  fig=px.pie(filtered_df,value='class count',names='class'tile=f'Total success 
+  launches for site(entered_site)")
+  return fig
+  #return the outcome piechart for a selected site
+  Add a pie chart to show the total sucessful launch count for all site 
+  if a specific launch site was selected show the sucess vs. failed counts for the site
+  html.Div(dcc.Graph(id='sucess_pie_chart'))
+  html.Br()
+
+html.P("payloadload range(kg):")
+#TASK 3: Add a slider to select payload range
+#dcc.RangeSlider (id='payload.slider',...)
+  dcc.RangeSlider(id='payload.sliser',               
+                   MIN=0
+                   MAX=10000
+                   STEP=1000
+     value=[min_payload,max_payload]  
+  ),
+
+#TASK4
+ Add a scatter chart to show the correlation between payload and launchsites
+html.Div(dcc.Graph(id='sucess.payload.scater.charts')),
+
+Add a callback function for 'site_dropdown' and 'payload_slider' as inputd
+ 'sucess_payload_scatter_chart' as output
+ app.callback(output(component_id'('sucess_payload_scatter_chart',
+    component_property='figure)),[input (component_id='site_dropdown',
+    component_property='value')])
+    def scatter(entered_site,payload_df{'payload mass(kg)'.
+        between(payload[0],payload[1]))
+ if  entered_site=='ALL':
+  fig=px.scatter (filtered_df,x='payload mass (kg)',
+          y='class color='Booster Version category',title='success count on payload mass for all site)
+     return fig
+     fig=px.scatter(filled_df(filtered_df['launchsite']==entered_site,
+        x='payload mass(kg)',y='class',color='Booster Version category 
+        title=f"success count on payload mass for site (entered_site)"))    
+        return fig
+        #Run the app
+        if_name_=='_main_':
+        app.run_server()     
